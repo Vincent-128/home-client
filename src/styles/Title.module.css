@@ -1,9 +1,0 @@
-.title {
-    grid-column: 1 / -1;
-    color: var(--text-norm);
-    font-size: 1rem;
-    font-weight: 500;
-    border-bottom: 1px solid var(--border-norm);
-    margin-bottom: 4px;
-    padding: 4px;
-}
