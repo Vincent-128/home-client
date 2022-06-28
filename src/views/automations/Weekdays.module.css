@@ -1,0 +1,25 @@
+.row {
+    margin-left: 10px;
+    display: flex;
+}
+
+.day {
+    margin: 5px;
+    width: 18px;
+    height: 18px;
+    padding: 6px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 600;
+    color: var(--signal-warning-contrast);
+    background-color: var(--field-disabled);
+    transition: background-color 0.2s;
+}
+
+.day.selected {
+    background-color: var(--signal-warning);
+}

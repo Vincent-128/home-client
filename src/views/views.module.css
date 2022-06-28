@@ -1,0 +1,21 @@
+.dashboard {
+    gap: 15px;
+    margin: auto;
+    display: grid;
+    max-width: 1200px;
+    grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+}
+
+.automations {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: auto;
+}
+
+.automation {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    background-color: var(--background-strong);
+}
