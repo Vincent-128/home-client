@@ -3,6 +3,7 @@ import { setDevices, setDevice } from './deviceSlice'
 import { setUserData } from './userSlice'
 import { store } from './store'
 import { Automation, Device, Entry, Theme } from '../types'
+import { setOptions } from '../components/selects'
 let ws: WebSocket
 
 enum WSEvent {
@@ -50,6 +51,7 @@ export const connectWebsocket = () => {
         console.log(json)
         switch (json.event) {
             case WSEvent.homeData:
+                setOptions(json.data.devices)
                 store.dispatch(setDevices(json.data.devices))
                 store.dispatch(setAutomations(json.data.automations))
                 store.dispatch(setEntries(json.data.entries))
