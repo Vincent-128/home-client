@@ -1,0 +1,36 @@
+.content {
+    gap: 10px;
+    width: 360px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    margin: 250px auto 0 auto;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.range {
+    width: 300px;
+    height: 20px;
+    outline: 0;
+    border-radius: 15px;
+    appearance: none;
+    -webkit-appearance: none;
+    overflow: hidden;
+    background: var(--interaction-norm-active);
+}
+
+.label {
+    width: 50px;
+}
+
+.range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: var(--interaction-norm);
+    box-shadow: -210px 0 0 200px var(--interaction-norm);
+}

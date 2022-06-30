@@ -38,7 +38,7 @@ interface StateUpdate {
 
 type WSMessage = HomeData | UserData | StateUpdate
 
-export const send = (data: string) => ws.send(JSON.stringify(data))
+export const send = (data: object) => ws.send(JSON.stringify(data))
 
 export const connectWebsocket = () => {
     ws = new WebSocket(location.origin.replace(/^http/, 'ws'))
