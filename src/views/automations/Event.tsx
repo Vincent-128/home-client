@@ -57,7 +57,7 @@ const Event = ({ id, trigger }: { id: string; trigger: Trigger }) => {
                 label='Trigger'
                 selected={trigger.type}
                 options={triggerOptions}
-                onSelect={type => dispatch(setTriggerType({ id, type: type as TriggerType }))}
+                onSelect={type => dispatch(setTriggerType({ id, type }))}
             />
             {getInputs()}
         </div>

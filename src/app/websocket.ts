@@ -42,10 +42,12 @@ type WSMessage = HomeData | UserData | StateUpdate
 export const send = (data: object) => ws.send(JSON.stringify(data))
 
 export const connectWebsocket = () => {
+    if (ws?.readyState === 0 || ws?.readyState === 1) return
     ws = new WebSocket('ws://192.168.2.241:9000')
-
+    
     ws.onopen = () => console.log('WebSocket Connected.')
     ws.onclose = () => setTimeout(connectWebsocket, 10000)
+    ws.onerror = e => console.error(e)
     ws.onmessage = e => {
         const json = JSON.parse(e.data) as WSMessage
         console.log(json)

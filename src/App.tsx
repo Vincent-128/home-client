@@ -1,4 +1,4 @@
-import { Automations, Dashboard } from './views'
+import { Automations, Dashboard, Settings } from './views'
 import { connectWebsocket } from './app/websocket'
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
@@ -15,7 +15,7 @@ const App = () => {
             <Routes>
                 <Route path='/' element={<Dashboard />} />
                 <Route path='automations' element={<Automations />} />
-                {/* <Route path='settings' element={<Settings />} /> */}
+                <Route path='settings' element={<Settings />} />
             </Routes>
         </>
     )

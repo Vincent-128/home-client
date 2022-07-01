@@ -10,9 +10,9 @@ interface Props {
     conditions: C[]
 }
 
-const options = [
-    { id: 'state', text: 'State' },
-    { id: 'range', text: 'Range' },
+const options: { id: ConditionType; text: string }[] = [
+    { id: ConditionType.State, text: 'State' },
+    { id: ConditionType.Range, text: 'Range' },
 ]
 
 const Conditions = ({ id, conditions }: Props) => {

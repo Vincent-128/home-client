@@ -1,23 +1,25 @@
-import { forwardRef } from 'react'
+import { forwardRef, Ref } from 'react'
 import styles from '../Input.module.css'
 
-interface Props {
+type Type = any
+
+interface Props<T extends Type> {
     options: {
-        id: string
+        id: T
         text: string
         selected: boolean
     }[]
-    onSelect: (selected: string) => void
+    onSelect: (selected: T) => void
 }
 
-const Options = forwardRef<HTMLDivElement, Props>(({ options, onSelect }, ref) => {
+const Options = forwardRef(<T extends Type>({ options, onSelect }: Props<T>, ref: Ref<HTMLDivElement>) => {
     return (
         <div className={styles.options} ref={ref}>
             {options.map(option => (
                 <div
                     className={styles.option + (option.selected ? ' ' + styles.checked : '')}
                     onClick={() => onSelect(option.id)}
-                    key={option.id}
+                    key={option.text}
                 >
                     {option.text}
                 </div>
@@ -26,4 +28,4 @@ const Options = forwardRef<HTMLDivElement, Props>(({ options, onSelect }, ref) =
     )
 })
 
-export default Options
+export default Options as <T extends Type>(props: Props<T> & { ref: Ref<HTMLDivElement> }) => JSX.Element

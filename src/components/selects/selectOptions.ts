@@ -1,25 +1,20 @@
 import { Device, DeviceType, EntryType, Icon, TriggerType } from '../../types'
 
-interface Option {
-    id: string
-    text: string
-}
-
-export const entryOptions: Option[] = [
+export const entryOptions: { id: EntryType; text: string }[] = [
     { id: EntryType.Device, text: 'Device' },
     { id: EntryType.If, text: 'If' },
     { id: EntryType.IfElse, text: 'If Else' },
     { id: EntryType.Wait, text: 'Wait' },
 ]
 
-export const triggerOptions: Option[] = [
+export const triggerOptions: { id: TriggerType; text: string }[] = [
     { id: TriggerType.Device, text: 'Device' },
     { id: TriggerType.Sunset, text: 'Sunset' },
     { id: TriggerType.Sunrise, text: 'Sunrise' },
     { id: TriggerType.Time, text: 'Time' },
 ]
 
-export const deviceOptions: Option[] = [
+export const deviceOptions: { id: DeviceType; text: string }[] = [
     { id: DeviceType.Button, text: 'Button' },
     { id: DeviceType.Dimmer, text: 'Dimmer' },
     { id: DeviceType.Door, text: 'Door' },
@@ -30,7 +25,7 @@ export const deviceOptions: Option[] = [
     { id: DeviceType.Switch, text: 'Switch' },
 ]
 
-export const iconOptions: Option[] = [
+export const iconOptions: { id: Icon; text: string }[] = [
     { id: Icon.Sensor, text: 'Sensor' },
     { id: Icon.ChristmasTree, text: 'Christmas Tree' },
     { id: Icon.ChristmasLights, text: 'Christmas Lights' },
@@ -46,7 +41,7 @@ export const iconOptions: Option[] = [
     { id: Icon.Spearkes, text: 'Spearkes' },
 ]
 
-export const brightnessOptions: Option[] = [
+export const brightnessOptions: { id: string; text: string }[] = [
     { id: '100', text: '10%' },
     { id: '200', text: '20%' },
     { id: '300', text: '30%' },
@@ -59,17 +54,17 @@ export const brightnessOptions: Option[] = [
     { id: '1000', text: '100%' },
 ]
 
-export const outletOptions: Option[] = [
-    { id: '1', text: '1' },
-    { id: '2', text: '2' },
-    { id: '3', text: '3' },
-    { id: '4', text: '4' },
-    { id: '5', text: '5' },
+export const outletOptions: { id: number; text: string }[] = [
+    { id: 1, text: '1' },
+    { id: 2, text: '2' },
+    { id: 3, text: '3' },
+    { id: 4, text: '4' },
+    { id: 5, text: '5' },
 ]
 
-export const roomOptions: Option[] = []
-export const dimmingOptions: Option[] = []
-export const allDeviceOptions: Option[] = []
+export const roomOptions: { id: string; text: string }[] = []
+export const dimmingOptions: { id: string; text: string }[] = []
+export const allDeviceOptions: { id: string; text: string }[] = []
 
 export const setOptions = (devices: Device[]) => {
     const rooms = new Set<string>()

@@ -64,7 +64,7 @@ const Device = ({ id, index }: { id: string; index: number }) => {
                 onClick={onClick}
                 {...useLongPress(onLongPress, { isPreventDefault: false })}
             >
-                <Icon className={styles.image} type={device.image} />
+                <Icon className={styles.image} type={device.icon} />
                 <div className={styles.room}>{device.room}</div>
                 <div className={styles.name}>{device.name}</div>
                 <div className={styles.state}>{getText()}</div>

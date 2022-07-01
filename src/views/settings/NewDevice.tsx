@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react'
 import { TextInput, Title } from '../../components'
 import { ToggleButton } from '../../components/buttons'
 import { deviceOptions, iconOptions, outletOptions, Select } from '../../components/selects'
-import { Device, DeviceData, DeviceType, Icon, MultiOutlet, TuyaDevice } from '../../types'
+import { BaseDevice, DeviceData, DeviceType, Icon, MultiOutlet, TuyaDevice } from '../../types'
 import styles from './NewDevice.module.css'
 
 const NewDevice = () => {
@@ -19,15 +19,20 @@ const NewDevice = () => {
         switch (type) {
             case DeviceType.Outlet:
             case DeviceType.Dimmer:
-                const device: TuyaDevice = { ip, key, custom: false, id, room, type, data: [data[0]] }
+                const tuyaDevice: TuyaDevice = { ip, key, custom: false, id, room, type, data: [data[0]] }
+                console.log(tuyaDevice)
                 break
             case DeviceType.MultiOutlet:
                 const multiOutlet: MultiOutlet = {
                     ip, key, custom: false, id, room, type, 
                     data, combine, outlets
                 }
+                console.log(multiOutlet)
                 break
             default:
+                const device: BaseDevice = { id, room, type, data, custom: true }
+                console.log(device)
+                break
         }
     }
 
@@ -69,7 +74,7 @@ const NewDevice = () => {
                 <>
                     <Select label='Nunber of Outlets' options={outletOptions} selected={outlets} onSelect={t => setOutlets(t)} />
                     <ToggleButton label='Combine' on={'Yes'} off={'No'} state={false} onClick={c => setCombine(c)} />
-                    {Array(outlets).map((_t, i) => (
+                    {Array(outlets).fill(0).map((_t, i) => (
                         <Fragment key={i}>
                             <Title title={'Outlet ' + (i + 1)} />
                             <TextInput label={'Name'} text={data[i].name} onInput={t => setName(t, i)} />
