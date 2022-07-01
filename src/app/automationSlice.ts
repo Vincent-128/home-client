@@ -28,7 +28,25 @@ export const automationSlice = createSlice({
             state.automations = action.payload
         },
 
-        setTrigger: (state, action: PayloadAction<{ id: string; type: TriggerType }>) => {
+        setTrigger: (state, action: PayloadAction<{ id: string; prop: string | boolean }>) => {
+            const { id, prop } = action.payload
+            const trigger = state.automations.find(a => a.id === id)?.trigger
+            if (trigger) {
+                switch (trigger.type) {
+                    case TriggerType.Device:
+                        typeof prop === 'boolean' ? (trigger.state = prop) : (trigger.device = prop)
+                        break
+                    case TriggerType.Sunset:
+                    case TriggerType.Sunrise:
+                        trigger.offset = prop as string
+                        break
+                    case TriggerType.Time:
+                        trigger.time = prop as string
+                }
+            }
+        },
+
+        setTriggerType: (state, action: PayloadAction<{ id: string; type: TriggerType }>) => {
             const { id, type } = action.payload
             const automation = state.automations.find(a => a.id === id)!
 
@@ -51,9 +69,14 @@ export const automationSlice = createSlice({
             state.entries = action.payload
         },
 
-        setEntry: (state, action: PayloadAction<{ id: string }>) => {
-            const { id, ...props } = action.payload
-            state.entries[id] = { ...state.entries[id], ...props }
+        setEntry: (state, action: PayloadAction<{ id: string; prop: boolean | string | string[] }>) => {
+            const { id, prop } = action.payload
+            const entry = state.entries[id]
+            if (entry.type === EntryType.Device) {
+                typeof prop === 'boolean' ? (entry.state = prop) : (entry.device = prop as string[])
+            } else if (entry.type === EntryType.Wait) {
+                entry.wait = prop as string
+            }
         },
 
         addEntry: (state, action: PayloadAction<{ type: EntryType; parentId: string }>) => {
@@ -124,11 +147,22 @@ export const automationSlice = createSlice({
             )
         },
 
-        setCondition: (state, action: PayloadAction<{ id: string; index: number }>) => {
+        setCondition: (
+            state,
+            action: PayloadAction<{ id: string; index: number; state?: boolean; device?: string; start?: string; end?: string }>
+        ) => {
             const { id, index, ...props } = action.payload
             const entry = state.entries[id]
-            if (!('conditions' in entry)) return
-            entry.conditions[index] = { ...entry.conditions[index], ...props }
+            if ('conditions' in entry) {
+                const condition = entry.conditions[index]
+                if (condition.type === ConditionType.State) {
+                    if (props.device) condition.device = props.device
+                    if (props.state) condition.state = props.state
+                } else if (condition.type === ConditionType.Range) {
+                    if (props.start) condition.start = props.start
+                    if (props.end) condition.end = props.end
+                }
+            }
         },
 
         removeCondition: (state, action: PayloadAction<{ id: string; index: number }>) => {
@@ -161,6 +195,7 @@ export const getEntry = (state: RootState, id: string) => state.automations.entr
 export const {
     setAutomations,
     setTrigger,
+    setTriggerType,
     setWeekday,
     setEntries,
     addEntry,

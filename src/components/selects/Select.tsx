@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect } from 'react'
-import styles from '../../styles/Input.module.css'
+import { useState, useRef } from 'react'
 import { useClickAway } from '../../utils'
+import styles from '../Input.module.css'
 import Options from './Options'
 
 interface Props {
     label: string
     selected: string
-    options: { id: string; name: string }[]
+    options: { id: string; text: string }[]
     onSelect: (selected: string) => void
 }
 
@@ -16,16 +16,10 @@ const path =
 
 const Select = ({ label, selected, options, onSelect }: Props) => {
     const items = options.map(o => ({ ...o, selected: selected === o.id }))
-    const text = items.find(i => i.selected)?.name || ''
+    const text = items.find(i => i.selected)?.text || ''
     const classes = styles.container + (text !== '' ? ' ' + styles.minimize : '')
     const [showOptions, setShowOptions] = useState(false)
     const ref = useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-        const listerner = () => {}
-        document.addEventListener('click', e => {})
-        return
-    }, [ref])
 
     const handleSelect = (id: string) => {
         setShowOptions(false)

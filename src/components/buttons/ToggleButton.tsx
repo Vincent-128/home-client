@@ -1,4 +1,4 @@
-import styles from '../../styles/Input.module.css'
+import styles from '../Input.module.css'
 
 interface Props {
     label: string

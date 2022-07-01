@@ -1,4 +1,4 @@
-import styles from '../../styles/Input.module.css'
+import styles from '..//Input.module.css'
 import { useClickAway } from '../../utils'
 import { useState, useRef } from 'react'
 import Options from './Options'
@@ -6,7 +6,7 @@ import Options from './Options'
 interface Props {
     label: string
     selected: string[]
-    options: { id: string; name: string }[]
+    options: { id: string; text: string }[]
     onSelect: (selected: string[]) => void
 }
 
@@ -18,7 +18,7 @@ const MultiSelect = ({ label, selected, options, onSelect }: Props) => {
     const items = options.map(o => ({ ...o, selected: selected.includes(o.id) }))
     const text = items
         .filter(i => i.selected)
-        .map(i => i.name)
+        .map(i => i.text)
         .join(', ')
     const classes = styles.container + (text !== '' ? ' ' + styles.minimize : '')
     const [showOptions, setShowOptions] = useState(false)

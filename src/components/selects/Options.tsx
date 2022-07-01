@@ -1,10 +1,10 @@
 import { forwardRef } from 'react'
-import styles from '../../styles/Input.module.css'
+import styles from '../Input.module.css'
 
 interface Props {
     options: {
         id: string
-        name: string
+        text: string
         selected: boolean
     }[]
     onSelect: (selected: string) => void
@@ -19,7 +19,7 @@ const Options = forwardRef<HTMLDivElement, Props>(({ options, onSelect }, ref) =
                     onClick={() => onSelect(option.id)}
                     key={option.id}
                 >
-                    {option.name}
+                    {option.text}
                 </div>
             ))}
         </div>

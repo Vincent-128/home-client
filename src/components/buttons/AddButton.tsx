@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import styles from './AddButton.module.css'
 
 interface Props {
-    options: { id: string; value: string }[]
+    options: { id: string; text: string }[]
     onClick: (type: string) => void
 }
 
@@ -23,7 +23,7 @@ const AddButton = ({ options, onClick }: Props) => {
             </svg>
             {options.map(option => (
                 <div className={styles.option} key={option.id} onClick={() => onClick(option.id)}>
-                    {option.value}
+                    {option.text}
                 </div>
             ))}
         </div>

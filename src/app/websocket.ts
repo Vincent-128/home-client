@@ -7,13 +7,13 @@ import { setOptions } from '../components/selects'
 let ws: WebSocket
 
 enum WSEvent {
-    homeData,
-    userData,
-    stateUpdate,
+    HomeData = 'homeData',
+    UserData = 'userData',
+    StateUpdate = 'stateUpdate',
 }
 
 interface HomeData {
-    event: WSEvent.homeData
+    event: WSEvent.HomeData
     data: {
         devices: Device[]
         automations: Automation[]
@@ -22,7 +22,7 @@ interface HomeData {
 }
 
 interface UserData {
-    event: WSEvent.userData
+    event: WSEvent.UserData
     data: {
         mode: Theme
         room: string
@@ -31,7 +31,7 @@ interface UserData {
 }
 
 interface StateUpdate {
-    event: WSEvent.stateUpdate
+    event: WSEvent.StateUpdate
     id: string
     index: number
     data: any
@@ -42,7 +42,7 @@ type WSMessage = HomeData | UserData | StateUpdate
 export const send = (data: object) => ws.send(JSON.stringify(data))
 
 export const connectWebsocket = () => {
-    ws = new WebSocket(location.origin.replace(/^http/, 'ws'))
+    ws = new WebSocket('ws://192.168.2.241:9000')
 
     ws.onopen = () => console.log('WebSocket Connected.')
     ws.onclose = () => setTimeout(connectWebsocket, 10000)
@@ -50,16 +50,16 @@ export const connectWebsocket = () => {
         const json = JSON.parse(e.data) as WSMessage
         console.log(json)
         switch (json.event) {
-            case WSEvent.homeData:
+            case WSEvent.HomeData:
                 setOptions(json.data.devices)
                 store.dispatch(setDevices(json.data.devices))
                 store.dispatch(setAutomations(json.data.automations))
                 store.dispatch(setEntries(json.data.entries))
                 break
-            case WSEvent.userData:
+            case WSEvent.UserData:
                 store.dispatch(setUserData(json.data))
                 break
-            case WSEvent.stateUpdate:
+            case WSEvent.StateUpdate:
                 store.dispatch(setDevice(json))
                 break
             default:
