@@ -27,13 +27,13 @@ export enum Icon {
 
 export interface DeviceData {
     name: string
-    image: Icon
+    icon: Icon
     state: boolean
     text?: string
     brightness?: number
 }
 
-export interface Device {
+export interface BaseDevice {
     id: string
     room: string
     type: DeviceType
@@ -41,7 +41,7 @@ export interface Device {
     custom: boolean
 }
 
-export interface TuyaDevice extends Device {
+export interface TuyaDevice extends BaseDevice {
     ip: string
     key: string
     custom: false
@@ -50,7 +50,10 @@ export interface TuyaDevice extends Device {
 export interface MultiOutlet extends TuyaDevice {
     type: DeviceType.MultiOutlet
     combine: boolean
+    outlets: number
 }
+
+export type Device = BaseDevice | TuyaDevice | MultiOutlet
 
 export enum ConditionType {
     State = 'state',
