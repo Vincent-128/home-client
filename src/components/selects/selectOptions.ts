@@ -75,7 +75,7 @@ export const setOptions = (devices: Device[]) => {
         const { id, room, data } = device
         rooms[room] = room
         data.forEach((d, i) => {
-            const option = { id: `${id}=>${i}`, text: d.name }
+            const option = { id: `${id}=>${i}`, text: `${room} ${d.name}` }
             all.push(option)
             if (device.type === DeviceType.Dimmer) dimming.push(option)
         })

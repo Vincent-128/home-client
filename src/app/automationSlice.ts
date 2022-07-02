@@ -3,11 +3,11 @@ import { Automation, ConditionType, Entry, EntryType, ParentEntry, TriggerType }
 import { RootState } from './store'
 
 const initialState: {
-    automations: { current: Automation[]; update: Automation[] }
-    entries: { [key: string]: Entry }
+    current: { automations: Automation[]; entries: { [key: string]: Entry } }
+    update: { automations: Automation[]; entries: { [key: string]: Entry } }
 } = {
-    automations: { current: [], update: [] },
-    entries: {},
+    current: { automations: [], entries: {} },
+    update: { automations: [], entries: {} },
 }
 
 let currentId = 1000
@@ -39,26 +39,28 @@ export const automationSlice = createSlice({
                 sequence: entry.id,
             }
             entry.parentId = automation.id
-            state.entries[entry.id] = entry
-            state.automations.update.push(automation)
+            state.update.entries[entry.id] = entry
+            state.update.automations.push(automation)
         },
 
         setAutomations: (state, action: PayloadAction<Automation[]>) => {
-            state.automations.current = action.payload
-            state.automations.update = action.payload
+            state.current.automations = action.payload
+            state.update.automations = action.payload
         },
 
         saveAutomations: (state, action: PayloadAction<boolean>) => {
             if (action.payload) {
-                state.automations.current = state.automations.update
+                state.current.automations = state.update.automations
+                state.current.entries = state.update.entries
             } else {
-                state.automations.update = state.automations.current
+                state.update.automations = state.current.automations
+                state.update.entries = state.current.entries
             }
         },
 
         setTrigger: (state, action: PayloadAction<{ id: string; prop: string | boolean }>) => {
             const { id, prop } = action.payload
-            const trigger = state.automations.update.find(a => a.id === id)?.trigger
+            const trigger = state.update.automations.find(a => a.id === id)?.trigger
             if (trigger) {
                 switch (trigger.type) {
                     case TriggerType.Device:
@@ -76,7 +78,7 @@ export const automationSlice = createSlice({
 
         setTriggerType: (state, action: PayloadAction<{ id: string; type: TriggerType }>) => {
             const { id, type } = action.payload
-            const automation = state.automations.update.find(a => a.id === id)!
+            const automation = state.update.automations.find(a => a.id === id)!
 
             if (type === TriggerType.Device) {
                 automation.trigger = { type, device: '', state: true }
@@ -89,17 +91,18 @@ export const automationSlice = createSlice({
 
         setWeekday: (state, action: PayloadAction<{ id: string; index: number; selected: boolean }>) => {
             const { id, index, selected } = action.payload
-            const automation = state.automations.update.find(a => a.id === id)!
+            const automation = state.update.automations.find(a => a.id === id)!
             automation.weekdays[index] = selected
         },
 
         setEntries: (state, action: PayloadAction<{ [key: string]: Entry }>) => {
-            state.entries = action.payload
+            state.update.entries = action.payload
+            state.current.entries = action.payload
         },
 
         setEntry: (state, action: PayloadAction<{ id: string; prop: boolean | string | string[] }>) => {
             const { id, prop } = action.payload
-            const entry = state.entries[id]
+            const entry = state.update.entries[id]
             if (entry.type === EntryType.Device) {
                 typeof prop === 'boolean' ? (entry.state = prop) : (entry.device = prop as string[])
             } else if (entry.type === EntryType.Wait) {
@@ -110,29 +113,29 @@ export const automationSlice = createSlice({
         addEntry: (state, action: PayloadAction<{ type: EntryType; parentId: string }>) => {
             const id = getId()
             const { type, parentId } = action.payload
-            const parentEntry = state.entries[parentId]
+            const parentEntry = state.update.entries[parentId]
             if (!isParent(parentEntry)) return
 
             parentEntry.children.push(id)
 
             switch (type) {
                 case EntryType.Device:
-                    state.entries[id] = { type, parentId, id, device: [], state: true }
+                    state.update.entries[id] = { type, parentId, id, device: [], state: true }
                     break
                 case EntryType.Wait:
-                    state.entries[id] = { type, parentId, id, wait: '' }
+                    state.update.entries[id] = { type, parentId, id, wait: '' }
                     break
                 case EntryType.If:
                     const seqId = getId()
-                    state.entries[id] = { type, parentId, id, conditions: [], thenSeq: seqId }
-                    state.entries[seqId] = { id: seqId, type: EntryType.Parent, parentId: id, children: [] }
+                    state.update.entries[id] = { type, parentId, id, conditions: [], thenSeq: seqId }
+                    state.update.entries[seqId] = { id: seqId, type: EntryType.Parent, parentId: id, children: [] }
                     break
                 case EntryType.IfElse:
                     const thenId = getId()
                     const elseId = getId()
-                    state.entries[id] = { type, parentId, id, conditions: [], thenSeq: thenId, elseSeq: elseId }
-                    state.entries[thenId] = { id: thenId, type: EntryType.Parent, parentId: id, children: [] }
-                    state.entries[elseId] = { id: elseId, type: EntryType.Parent, parentId: id, children: [] }
+                    state.update.entries[id] = { type, parentId, id, conditions: [], thenSeq: thenId, elseSeq: elseId }
+                    state.update.entries[thenId] = { id: thenId, type: EntryType.Parent, parentId: id, children: [] }
+                    state.update.entries[elseId] = { id: elseId, type: EntryType.Parent, parentId: id, children: [] }
                     break
                 default:
                     break
@@ -140,30 +143,30 @@ export const automationSlice = createSlice({
         },
 
         removeEntry: (state, action: PayloadAction<string>) => {
-            const entry = state.entries[action.payload]
-            const parent = state.entries[entry.parentId] as ParentEntry
+            const entry = state.update.entries[action.payload]
+            const parent = state.update.entries[entry.parentId] as ParentEntry
             parent.children = parent.children.filter(id => id !== entry.id)
 
             const remove = (id: string) => {
-                const entry = state.entries[id]
+                const entry = state.update.entries[id]
                 if (entry.type === EntryType.If || entry.type === EntryType.IfElse) {
-                    const thenSeq = state.entries[entry.thenSeq] as ParentEntry
+                    const thenSeq = state.update.entries[entry.thenSeq] as ParentEntry
                     thenSeq.children.forEach(remove)
-                    delete state.entries[thenSeq.id]
+                    delete state.update.entries[thenSeq.id]
                 }
                 if (entry.type === EntryType.IfElse) {
-                    const elseSeq = state.entries[entry.elseSeq] as ParentEntry
+                    const elseSeq = state.update.entries[entry.elseSeq] as ParentEntry
                     elseSeq.children.forEach(remove)
-                    delete state.entries[elseSeq.id]
+                    delete state.update.entries[elseSeq.id]
                 }
-                delete state.entries[entry.id]
+                delete state.update.entries[entry.id]
             }
             remove(entry.id)
         },
 
         addCondition: (state, action: PayloadAction<{ id: string; type: ConditionType }>) => {
             const { id, type } = action.payload
-            const entry = state.entries[id]
+            const entry = state.update.entries[id]
             if (!('conditions' in entry)) return
             if (entry.conditions.length > 0) {
                 entry.conditions.push({ type: ConditionType.Operator, isAnd: true })
@@ -180,7 +183,7 @@ export const automationSlice = createSlice({
             action: PayloadAction<{ id: string; index: number; state?: boolean; device?: string; start?: string; end?: string }>
         ) => {
             const { id, index, ...props } = action.payload
-            const entry = state.entries[id]
+            const entry = state.update.entries[id]
             if ('conditions' in entry) {
                 const condition = entry.conditions[index]
                 if (condition.type === ConditionType.State) {
@@ -195,7 +198,7 @@ export const automationSlice = createSlice({
 
         removeCondition: (state, action: PayloadAction<{ id: string; index: number }>) => {
             const { id, index } = action.payload
-            const entry = state.entries[id]
+            const entry = state.update.entries[id]
             if (!('conditions' in entry)) return
             if (entry.conditions.length === 1) {
                 entry.conditions = []
@@ -208,7 +211,7 @@ export const automationSlice = createSlice({
 
         toggleOperator: (state, action: PayloadAction<{ id: string; index: number }>) => {
             const { id, index } = action.payload
-            const entry = state.entries[id]
+            const entry = state.update.entries[id]
             if ('conditions' in entry) {
                 const condition = entry.conditions[index]
                 if ('isAnd' in condition) condition.isAnd = !condition.isAnd
@@ -217,8 +220,8 @@ export const automationSlice = createSlice({
     },
 })
 
-export const getAutomations = (state: RootState) => state.automations.automations.update
-export const getEntry = (state: RootState, id: string) => state.automations.entries[id]
+export const getAutomations = (state: RootState) => state.automations.update.automations
+export const getEntry = (state: RootState, id: string) => state.automations.update.entries[id]
 
 export const {
     addAutomation,
