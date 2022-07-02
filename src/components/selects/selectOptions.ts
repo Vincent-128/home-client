@@ -62,20 +62,25 @@ export const outletOptions: { id: number; text: string }[] = [
     { id: 5, text: '5' },
 ]
 
-export const roomOptions: { id: string; text: string }[] = []
-export const dimmingOptions: { id: string; text: string }[] = []
-export const allDeviceOptions: { id: string; text: string }[] = []
+export let roomOptions: { id: string; text: string }[] = []
+export let dimmingOptions: { id: string; text: string }[] = []
+export let allDeviceOptions: { id: string; text: string }[] = []
 
 export const setOptions = (devices: Device[]) => {
-    const rooms = new Set<string>()
+    const rooms: { [id: string]: string } = {}
+    const all: { id: string; text: string }[] = []
+    const dimming: { id: string; text: string }[] = []
+
     devices.forEach(device => {
         const { id, room, data } = device
-        rooms.add(room)
+        rooms[room] = room
         data.forEach((d, i) => {
-            const option = { id: id + '/' + i, text: d.name }
-            allDeviceOptions.push(option)
-            if (device.type === DeviceType.Dimmer) dimmingOptions.push(option)
+            const option = { id: `${id}/${i}`, text: d.name }
+            all.push(option)
+            if (device.type === DeviceType.Dimmer) dimming.push(option)
         })
     })
-    rooms.forEach(room => roomOptions.push({ id: room, text: room }))
+    allDeviceOptions = all
+    dimmingOptions = dimming
+    roomOptions = Object.keys(rooms).map(r => ({ id: r, text: r }))
 }
