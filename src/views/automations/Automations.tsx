@@ -1,13 +1,15 @@
-import { getAutomations } from '../../app/automationSlice'
+import { addAutomation, getAutomations, saveAutomations } from '../../app/automationSlice'
+import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import { Title } from '../../components'
-import styles from '../views.module.css'
+import styles from './Automations.module.css'
+import Weekdays from './Weekdays'
 import Entry from './Entry'
 import Event from './Event'
-import Weekdays from './Weekdays'
 
 const Automations = () => {
     const automations = useSelector(getAutomations)
+    const dispatch = useAppDispatch()
 
     return (
         <div className={styles.automations}>
@@ -21,6 +23,17 @@ const Automations = () => {
                     <Entry id={automation.sequence} />
                 </div>
             ))}
+            <div className={styles.button} onClick={() => dispatch(addAutomation())}>
+                Add
+            </div>
+            <div className={styles.buttonGroup}>
+                <div className={styles.button} onClick={() => dispatch(saveAutomations(true))}>
+                    Save
+                </div>
+                <div className={styles.cancel} onClick={() => dispatch(saveAutomations(false))}>
+                    Cancel
+                </div>
+            </div>
         </div>
     )
 }

@@ -3,17 +3,17 @@ import { Automation, ConditionType, Entry, EntryType, ParentEntry, TriggerType }
 import { RootState } from './store'
 
 const initialState: {
-    automations: Automation[]
+    automations: { current: Automation[]; update: Automation[] }
     entries: { [key: string]: Entry }
 } = {
-    automations: [],
+    automations: { current: [], update: [] },
     entries: {},
 }
 
 let currentId = 1000
 
 const getId = () => {
-    return String(++currentId)
+    return `id-${currentId++}`
 }
 
 const isParent = (entry: Entry): entry is ParentEntry => {
@@ -24,13 +24,41 @@ export const automationSlice = createSlice({
     name: 'automations',
     initialState,
     reducers: {
+        addAutomation: state => {
+            const entry: ParentEntry = {
+                id: getId(),
+                type: EntryType.Parent,
+                parentId: '',
+                children: [],
+            }
+            const automation: Automation = {
+                id: getId(),
+                enabled: true,
+                weekdays: [true, true, true, true, true, true, true],
+                trigger: { type: TriggerType.Device, device: '', state: true },
+                sequence: entry.id,
+            }
+            entry.parentId = automation.id
+            state.entries[entry.id] = entry
+            state.automations.update.push(automation)
+        },
+
         setAutomations: (state, action: PayloadAction<Automation[]>) => {
-            state.automations = action.payload
+            state.automations.current = action.payload
+            state.automations.update = action.payload
+        },
+
+        saveAutomations: (state, action: PayloadAction<boolean>) => {
+            if (action.payload) {
+                state.automations.current = state.automations.update
+            } else {
+                state.automations.update = state.automations.current
+            }
         },
 
         setTrigger: (state, action: PayloadAction<{ id: string; prop: string | boolean }>) => {
             const { id, prop } = action.payload
-            const trigger = state.automations.find(a => a.id === id)?.trigger
+            const trigger = state.automations.update.find(a => a.id === id)?.trigger
             if (trigger) {
                 switch (trigger.type) {
                     case TriggerType.Device:
@@ -48,7 +76,7 @@ export const automationSlice = createSlice({
 
         setTriggerType: (state, action: PayloadAction<{ id: string; type: TriggerType }>) => {
             const { id, type } = action.payload
-            const automation = state.automations.find(a => a.id === id)!
+            const automation = state.automations.update.find(a => a.id === id)!
 
             if (type === TriggerType.Device) {
                 automation.trigger = { type, device: '', state: true }
@@ -61,7 +89,7 @@ export const automationSlice = createSlice({
 
         setWeekday: (state, action: PayloadAction<{ id: string; index: number; selected: boolean }>) => {
             const { id, index, selected } = action.payload
-            const automation = state.automations.find(a => a.id === id)!
+            const automation = state.automations.update.find(a => a.id === id)!
             automation.weekdays[index] = selected
         },
 
@@ -157,7 +185,7 @@ export const automationSlice = createSlice({
                 const condition = entry.conditions[index]
                 if (condition.type === ConditionType.State) {
                     if (props.device) condition.device = props.device
-                    if (props.state) condition.state = props.state
+                    if (props.state !== undefined) condition.state = props.state
                 } else if (condition.type === ConditionType.Range) {
                     if (props.start) condition.start = props.start
                     if (props.end) condition.end = props.end
@@ -189,11 +217,13 @@ export const automationSlice = createSlice({
     },
 })
 
-export const getAutomations = (state: RootState) => state.automations.automations
+export const getAutomations = (state: RootState) => state.automations.automations.update
 export const getEntry = (state: RootState, id: string) => state.automations.entries[id]
 
 export const {
+    addAutomation,
     setAutomations,
+    saveAutomations,
     setTrigger,
     setTriggerType,
     setWeekday,

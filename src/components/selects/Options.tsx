@@ -19,7 +19,7 @@ const Options = forwardRef(<T extends Type>({ options, onSelect }: Props<T>, ref
                 <div
                     className={styles.option + (option.selected ? ' ' + styles.checked : '')}
                     onClick={() => onSelect(option.id)}
-                    key={option.text}
+                    key={option.id as string}
                 >
                     {option.text}
                 </div>

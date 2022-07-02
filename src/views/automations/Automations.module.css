@@ -1,0 +1,42 @@
+.automations {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: auto;
+}
+
+.automation {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    background-color: var(--background-strong);
+}
+
+.buttonGroup {
+    position: fixed;
+    gap: 15px;
+    right: 30px;
+    bottom: 20px;
+    display: flex;
+}
+
+.button, .cancel {
+    color: #fff;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background-color: var(--interaction-norm);
+    align-self: flex-start
+}
+
+.button:hover {
+    background-color: var(--interaction-norm-hover);
+}
+
+.cancel {
+    background-color: var(--field-norm);
+}
+
+.cancel:hover {
+    background-color: var(--field-hover);
+}
