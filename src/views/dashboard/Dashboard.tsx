@@ -9,7 +9,7 @@ const Dashboard = () => {
         <div>
             <div className={styles.dashboard}>
                 {layout.map(device => {
-                    const [id, index] = device.split('/')
+                    const [id, index] = device.split('=>')
                     return <Device id={id} index={parseInt(index)} key={device} />
                 })}
             </div>

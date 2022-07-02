@@ -15,9 +15,9 @@ const Device = ({ id, index }: { id: string; index: number }) => {
 
     const onClick = () => {
         if (['outlet', 'switch', 'multioutlet', 'dimmer'].includes(device.type)) {
-            send({ event: 'toggleDevice', id, index })
+            send({ event: 'toggleDevice', id: `${id}=>${index}` })
         } else if (device.type === 'garage') {
-            send({ event: 'setDevice', id, index })
+            send({ event: 'setDevice', id: `${id}=>${index}` })
         }
     }
 
@@ -29,9 +29,9 @@ const Device = ({ id, index }: { id: string; index: number }) => {
 
     const onBrightness = (brightness: number) => {
         if (brightness === 0) {
-            send({ event: 'setDevice', id, index, state: false, brightness: 50 })
+            send({ event: 'setDevice', id: `${id}=>${index}`, state: false, brightness: 50 })
         } else {
-            send({ event: 'setDevice', id, index, state: true, brightness })
+            send({ event: 'setDevice', id: `${id}=>${index}`, state: true, brightness })
         }
     }
 
