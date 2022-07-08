@@ -1,0 +1,6 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+    <path fill-rule="evenodd"
+        d="M0 200A200 200 0 0 1 200 0h600a200 200 0 0 1 200 200v600a200 200 0 0 1-200 200H200A200 200 0 0 1 0 800zm100 300a400 400 0 0 1 800 0 400 400 0 0 1-800 0zm690-30c0 18-15 32-32 32h-32v160c0 35.5-29 64-64 64H342c-35 0-64-29-64-64V502h-32c-18 0-32-14-32-32 0-9 3-17 10-24l256-224c7-7 15-8 22-8s15 2 21 7l256 224c8 7 12 15 11 24z" />
+</svg>

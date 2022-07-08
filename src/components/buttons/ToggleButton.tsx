@@ -8,7 +8,7 @@ interface Props {
     onClick: (state: boolean) => void
 }
 
-const Toggle = ({ label, on, off, state, onClick }: Props) => {
+const ToggleButton = ({ label, on, off, state, onClick }: Props) => {
     return (
         <div className={styles.container + ' ' + styles.minimize} onClick={() => onClick(!state)}>
             <div className={styles.label}>{label}</div>
@@ -17,4 +17,4 @@ const Toggle = ({ label, on, off, state, onClick }: Props) => {
     )
 }
 
-export default Toggle
+export default ToggleButton
