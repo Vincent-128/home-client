@@ -1,0 +1,122 @@
+.container {
+    height: 22px;
+    min-width: 100px;
+    padding: 4px 8px;
+    display: grid;
+    position: relative;
+    align-items: center;
+    grid-template-columns: 1fr auto;
+    border-radius: 10px;
+    color: var(--text-norm);
+    background-color: inherit;
+    border: 1px solid var(--field-norm);
+    margin: 8px;
+}
+
+.container.disabled {
+    pointer-events: none;
+    border: 1px dashed var(--field-disabled);
+    color: var(--field-disabled);
+}
+
+.container:hover {
+    border: 1px solid var(--field-hover);
+}
+
+.container:focus,
+.container:focus-within {
+    border: 1px solid var(--interaction-norm);
+}
+
+.label {
+    top: 6px;
+    left: 5px;
+    padding: 0 3px;
+    position: absolute;
+    font-size: 16px;
+    line-height: 16px;
+    pointer-events: none;
+    background-color: inherit;
+    color: var(--field-norm);
+    transition: font-size 0.2s;
+    transition-property: font-size, top, left;
+}
+.container:hover .arrow {
+    fill: var(--field-hover);
+}
+.container:hover .label {
+    color: var(--field-hover);
+}
+
+.container:focus .label,
+.container:focus-within .label {
+    color: var(--interaction-norm);
+}
+
+.minimize .label {
+    top: -9px;
+    left: 10px;
+    font-size: 12px;
+}
+
+.arrow {
+    width: 14px;
+    height: 14px;
+    fill: var(--field-norm);
+    pointer-events: none;
+    margin-left: 8px;
+}
+
+.selectText {
+    width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+}
+
+.options {
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    margin-top: 8px;
+    background-color: #fff;
+    position: absolute;
+    max-height: 300px;
+    overflow-y: scroll;
+    border-radius: 8px;
+    box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+        rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
+}
+
+.option {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    color: #000;
+    z-index: 100;
+    justify-content: space-between;
+}
+
+.option.selected .text {
+    font-weight: 500;
+}
+
+.option:hover {
+    color: #fff;
+    background-color: var(--interaction-weak-hover);
+}
+
+.check {
+    width: 16px;
+    height: 16px;
+    fill: #3e28de;
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+.option:hover .check {
+    fill: #fff;
+}
